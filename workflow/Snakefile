@@ -3,13 +3,15 @@ import os
 from snakemake.remote.FTP import RemoteProvider
 
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
 FTP = FTPRemoteProvider(username="anonymous", password="mypassword")
+HTTP = HTTPRemoteProvider()
 
 print(config)
 
 rule retrieve_snp_vcf:
-    input: FTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
+    input: HTTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
     output: "data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz"
     run:
         shell("mv {input} {output}")

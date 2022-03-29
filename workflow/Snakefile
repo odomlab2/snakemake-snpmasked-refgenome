@@ -1,0 +1,66 @@
+import os
+
+from snakemake.remote.FTP import RemoteProvider
+
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+
+FTP = FTPRemoteProvider(username="anonymous", password="mypassword")
+
+print(config)
+
+rule retrieve_snp_vcf:
+    input: FTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
+    output: "data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz"
+    run:
+        shell("mv {input} {output}")
+
+checkpoint snp_split:
+    input:
+        vcf_file=rules.retrieve_snp_vcf.output,
+        ref_genome=config.get("genome")
+    output:
+        directory("./{strain}_N-masked/")
+    message:
+        "snpsplit prepare"
+    conda:
+        "envs/snpsplit-{strain}.yml"
+    log:
+        "logs/snp_split_{strain}.log"
+    params:
+        strain=lambda wildcards: wildcards.strain
+    shell:
+        "SNPsplit_genome_preparation --vcf_file {input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
+
+rule snp_split_concat:
+    input:
+        lambda wildcards: os.listdir(checkpoints.snp_split.get(**wildcards).output[0])
+    output:
+        "output/GRCm38.masked_{strain}.fa"
+    shell:
+        "cat {input} > {output}"
+
+
+rule cellranger_rna_mkref:
+    input:
+        fasta=rules.snp_split_concat.output,
+        annotation=config.get("annotation")
+    output:
+        directory("output/GRCm38_masked_{strain}")
+    params:
+        mem=300,
+        output_root_dir=lambda wildcards, output: os.path.split(output[0])[0],
+        cellranger_mkref_bin=config["executables"]["cellranger-rna"],
+        genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}"
+    log:
+        "output/GRCm38_masked_{strain}/cellranger_rna_mkref.log"
+    shell:
+        "mkdir -p {params.output_root_dir} ; "
+        "cd {params.output_root_dir} ; "
+        "echo Working directory is now: $(pwd) > {log} &&"
+        "{params.cellranger_mkref_bin}"
+        "--genome={params.genome} "
+        "--fasta={input.fasta[0]} "
+        "--genes={input.annotation[0]} "
+        "--memgb={params.mem} > {log}"
+
+

@@ -31,7 +31,7 @@ checkpoint snp_split:
         vcf_file="data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz",
         ref_genome=config.get("genome")
     output:
-        directory("./{strain}_N-masked/")
+        temp(directory("{strain}_N-masked/"))
     message:
         "snpsplit prepare"
     conda:

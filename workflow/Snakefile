@@ -35,7 +35,7 @@ checkpoint snp_split:
     message:
         "snpsplit prepare"
     conda:
-        "envs/snpsplit-{strain}.yml"
+        "envs/snpsplit.yml"
     log:
         "logs/snp_split_{strain}.log"
     params:

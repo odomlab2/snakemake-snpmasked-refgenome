@@ -9,16 +9,18 @@ FTP = FTPRemoteProvider(username="anonymous", password="mypassword")
 HTTP = HTTPRemoteProvider()
 
 print(config)
+rule all: 
 
-rule retrieve_snp_vcf:
-    input: HTTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
-    output: "data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz"
-    run:
-        shell("mv {input} {output}")
+
+#rule retrieve_snp_vcf:
+#    #    input: HTTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
+#    output: "data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz"
+#    run:
+#	print("File is there {output}")
 
 checkpoint snp_split:
     input:
-        vcf_file=rules.retrieve_snp_vcf.output,
+        vcf_file="data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz",
         ref_genome=config.get("genome")
     output:
         directory("./{strain}_N-masked/")

@@ -9,7 +9,15 @@ FTP = FTPRemoteProvider(username="anonymous", password="mypassword")
 HTTP = HTTPRemoteProvider()
 
 print(config)
-rule all: 
+
+all_files = ["output/GRCm38_masked_{strain}".format(strain=strain) for strain in config.get("strains")]
+
+print(all_files)
+
+rule all:
+    input:
+        all_files
+
 
 
 #rule retrieve_snp_vcf:

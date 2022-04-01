@@ -48,7 +48,7 @@ checkpoint snp_split:
 
 rule snp_split_concat:
     input:
-        lambda wildcards: os.listdir(checkpoints.snp_split.get(**wildcards).output[0])
+        lambda wildcards: os.listdir(checkpoints.snp_split.get(**wildcards).output.dir[0])
     output:
         "output/GRCm38.masked_{strain}.fa"
     shell:

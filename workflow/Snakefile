@@ -1,4 +1,4 @@
-import os
+import glob
 
 from snakemake.remote.FTP import RemoteProvider
 
@@ -48,7 +48,7 @@ checkpoint snp_split:
 
 rule snp_split_concat:
     input:
-        lambda wildcards: os.listdir(checkpoints.snp_split.get(**wildcards).output.dir)
+        lambda wildcards: glob.glob(checkpoints.snp_split.get(**wildcards).output.dir)
     output:
         "output/GRCm38.masked_{strain}.fa"
     shell:

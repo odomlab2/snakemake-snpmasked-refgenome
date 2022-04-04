@@ -71,9 +71,9 @@ rule cellranger_rna_mkref:
         mem=300,
         output_root_dir=lambda wildcards, output: os.path.split(output[0])[0],
         cellranger_mkref_bin=config["executables"]["cellranger-rna"],
-        genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}"
+        genome=lambda wildcards, input: f"GRCm38.masked_{wildcards.strain}"
     log:
-        "output/GRCm38_masked_{strain}/cellranger_rna_mkref.log"
+        "output/GRCm38.masked_{strain}/cellranger_rna_mkref.log"
     shell:
         "mkdir -p {params.output_root_dir} ; "
         "cd {params.output_root_dir} ; "

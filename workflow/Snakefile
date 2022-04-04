@@ -77,8 +77,8 @@ rule cellranger_rna_mkref:
     shell:
         "mkdir -p {params.output_root_dir} ; "
         "cd {params.output_root_dir} ; "
-        "echo Working directory is now: $(pwd) > {log} &&"
-        "{params.cellranger_mkref_bin}"
+        "echo Working directory is now: $(pwd) > {log} && "
+        "{params.cellranger_mkref_bin} "
         "--genome={params.genome} "
         "--fasta={input.fasta[0]} "
         "--genes={input.annotation[0]} "

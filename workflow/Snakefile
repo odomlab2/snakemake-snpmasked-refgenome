@@ -31,7 +31,7 @@ checkpoint snp_split:
         vcf_file="data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz",
         ref_genome=os.path.dirname(config.get("genome"))
     output:
-        dir=temp(directory("output/SNPs_{strain}")),
+        dir=temp(directory("output/SNPs_{strain}/")),
         report="output/{strain}_SNP_filtering_report.txt",
         archive="output/all_SNPs_{strain}_GRCm38.txt.gz"
     message:

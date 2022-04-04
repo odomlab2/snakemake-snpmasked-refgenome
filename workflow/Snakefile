@@ -44,6 +44,7 @@ checkpoint snp_split:
     params:
         strain=lambda wildcards: wildcards.strain
     shell:
+        "mkdir -p {output.dir}; "
         "cd {output.dir}; "
         "SNPsplit_genome_preparation --vcf_file {input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
 

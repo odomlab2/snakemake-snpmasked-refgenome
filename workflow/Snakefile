@@ -43,7 +43,7 @@ checkpoint snp_split:
         "logs/snp_split_{strain}.log"
     params:
         strain=lambda wildcards: wildcards.strain,
-        to_wf_root_dir=lambda wildcards, output: output.dir.count("/")*"../"
+        to_wf_root_dir=lambda wildcards, output: (output.dir.count("/")+1)*"../"
     shell:
         "mkdir -p {output.dir}; "
         "cd {output.dir}; "

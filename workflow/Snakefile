@@ -47,7 +47,7 @@ checkpoint snp_split:
     shell:
         "mkdir -p {output.dir}; "
         "cd {output.dir}; "
-        "SNPsplit_genome_preparation --vcf_file {params.to_wf_root_dir}{input.vcf_file} --strain {params.strain} --reference_genome {params.to_wf_root_dir}{input.ref_genome}"
+        "SNPsplit_genome_preparation --vcf_file {params.to_wf_root_dir}{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
 
 rule snp_split_concat:
     input:

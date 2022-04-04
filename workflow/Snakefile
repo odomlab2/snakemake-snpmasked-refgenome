@@ -43,11 +43,9 @@ checkpoint snp_split:
         "logs/snp_split_{strain}.log"
     params:
         strain=lambda wildcards: wildcards.strain,
-        to_wf_root_dir=lambda wildcards, output: (output.dir.count("/")+1)*"../"
     shell:
-        "mkdir -p {output.dir}; "
-        "cd {output.dir}; "
-        "SNPsplit_genome_preparation --vcf_file {params.to_wf_root_dir}{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
+        "cd output; "
+        "SNPsplit_genome_preparation --vcf_file ../{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
 
 rule snp_split_concat:
     input:

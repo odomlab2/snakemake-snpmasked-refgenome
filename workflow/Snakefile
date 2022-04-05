@@ -76,7 +76,7 @@ rule cellranger_rna_mkref:
         "cd output && "
         "{params.cellranger_mkref_bin} "
         "--genome={params.genome} "
-        "--fasta={input.fasta[0]} "
+        "--fasta=../{input.fasta[0]} "
         "--genes={input.annotation} "
         "--memgb={params.mem} > {log}"
 

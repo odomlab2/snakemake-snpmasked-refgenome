@@ -76,7 +76,7 @@ rule cellranger_rna_mkref:
         "{params.cellranger_mkref_bin} "
         "--genome={output} "
         "--fasta={input.fasta[0]} "
-        "--genes={input.annotation[0]} "
+        "--genes={input.annotation} "
         "--memgb={params.mem} > {log}"
 
 

@@ -1,6 +1,7 @@
 import glob
 
-from snakemake.remote.FTP import RemoteProvider
+from snakemake.utils import makedirs
+from snakemake.utils import shell
 
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
@@ -54,7 +55,7 @@ rule snp_split_concat:
             filename_pattern="*.fa")
         )
     output:
-        "output/GRCm38.masked_{strain}.fa"
+        "output/GRCm38_masked_{strain}.fa"
     group: "snp_split"
     run:
         print("{input}")
@@ -71,15 +72,12 @@ rule cellranger_rna_mkref:
         mem=300,
         output_root_dir=lambda wildcards, output: os.path.split(output[0])[0],
         cellranger_mkref_bin=config["executables"]["cellranger-rna"],
-        genome=lambda wildcards, input: f"GRCm38.masked_{wildcards.strain}"
+        genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}"
     log:
         "logs/cellranger_rna_mkref_GRCm38.masked_{strain}.log"
     shell:
-        "mkdir -p {params.output_root_dir} ; "
-        "cd {params.output_root_dir} ; "
-        "echo Working directory is now: $(pwd) > {log} && "
         "{params.cellranger_mkref_bin} "
-        "--genome={params.genome} "
+        "--genome={output} "
         "--fasta={input.fasta[0]} "
         "--genes={input.annotation[0]} "
         "--memgb={params.mem} > {log}"

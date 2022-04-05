@@ -4,3 +4,4 @@ genome: "/omics/odcf/reference_data/by-species/public-data/Mus_musculus/GRCm38/G
 annotation: "/omics/odcf/reference_data/by-species/public-data/Mus_musculus/GRCm38/GRCm38_phiX/unmodified/cellranger-rna/6.1.1/ensembl-98/Mus_musculus_ensembl-98.filtered.gtf"
 strains:
   - SPRET_EiJ
+  - CAST_EiJ

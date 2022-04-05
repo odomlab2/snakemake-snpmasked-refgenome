@@ -51,7 +51,7 @@ rule snp_split_concat:
     input:
         lambda wildcards: glob.glob("{directory}/{filename_pattern}".format(
             directory=checkpoints.snp_split.get(**wildcards).output.dir,
-            filename_pattern="*.txt")
+            filename_pattern="*.fa")
         )
     output:
         "output/GRCm38.masked_{strain}.fa"

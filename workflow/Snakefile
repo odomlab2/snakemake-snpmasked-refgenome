@@ -71,10 +71,11 @@ rule cellranger_rna_mkref:
         cellranger_mkref_bin=config["executables"]["cellranger-rna"],
         genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}"
     log:
-        "logs/cellranger_rna_mkref_GRCm38.masked_{strain}.log"
+        "cellranger_rna_mkref_GRCm38_masked_{strain}.log"
     shell:
+        "cd output "
         "{params.cellranger_mkref_bin} "
-        "--genome={output} "
+        "--genome={params.genome} "
         "--fasta={input.fasta[0]} "
         "--genes={input.annotation} "
         "--memgb={params.mem} > {log}"

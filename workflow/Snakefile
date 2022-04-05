@@ -51,6 +51,8 @@ rule snp_split_concat:
             directory=checkpoints.snp_split.get(**wildcards).output.dir,
             filename_pattern="*.fa")
         )
+    wildcard_constraints:
+        strain="|".join(config.get("strains"))
     output:
         "output/GRCm38_masked_{strain}.fa"
     group: "snp_split"
@@ -65,6 +67,8 @@ rule cellranger_rna_mkref:
         annotation=config.get("annotation")
     output:
         directory("output/GRCm38_masked_{strain}")
+    wildcard_constraints:
+        strain="|".join(config.get("strains"))
     params:
         mem=300,
         output_root_dir=lambda wildcards, output: os.path.split(output[0])[0],

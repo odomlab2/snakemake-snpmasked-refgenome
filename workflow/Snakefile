@@ -73,7 +73,7 @@ rule cellranger_rna_mkref:
     log:
         "cellranger_rna_mkref_GRCm38_masked_{strain}.log"
     shell:
-        "cd output "
+        "cd output && "
         "{params.cellranger_mkref_bin} "
         "--genome={params.genome} "
         "--fasta={input.fasta[0]} "

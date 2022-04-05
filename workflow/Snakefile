@@ -82,6 +82,6 @@ rule cellranger_rna_mkref:
         "--genome={params.genome} "
         "--fasta={input.fasta[0]} "
         "--genes={input.annotation[0]} "
-        "--memgb={params.mem} > {log}"
+        "--memgb={params.mem} > ../{log}"
 
 

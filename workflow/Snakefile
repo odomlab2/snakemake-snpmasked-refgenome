@@ -45,7 +45,7 @@ checkpoint snp_split:
         strain=lambda wildcards: wildcards.strain,
     shell:
         "cd output; "
-        "SNPsplit_genome_preparation --vcf_file ../{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome}"
+        "SNPsplit_genome_preparation --vcf_file ../{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome} > {log}"
 
 rule snp_split_concat:
     input:
@@ -73,7 +73,7 @@ rule cellranger_rna_mkref:
         cellranger_mkref_bin=config["executables"]["cellranger-rna"],
         genome=lambda wildcards, input: f"GRCm38.masked_{wildcards.strain}"
     log:
-        "output/GRCm38.masked_{strain}/cellranger_rna_mkref.log"
+        "logs/cellranger_rna_mkref_GRCm38.masked_{strain}.log"
     shell:
         "mkdir -p {params.output_root_dir} ; "
         "cd {params.output_root_dir} ; "
@@ -82,6 +82,6 @@ rule cellranger_rna_mkref:
         "--genome={params.genome} "
         "--fasta={input.fasta[0]} "
         "--genes={input.annotation[0]} "
-        "--memgb={params.mem} > ../{log}"
+        "--memgb={params.mem} > {log}"
 
 

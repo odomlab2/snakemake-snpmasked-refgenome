@@ -1,5 +1,4 @@
 import glob
-import pdb
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
@@ -56,7 +55,6 @@ rule snp_split_concat:
     output:
         "output/GRCm38_masked_{strain}.fa"
     run:
-        pdb.set_trace()
         print("{input}")
         shell("cat {input} > {output}")
 

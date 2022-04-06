@@ -11,7 +11,7 @@ print(config)
 all_files = ["output/GRCm38_masked_{strain}".format(strain=strain) for strain in config.get("strains")]
 
 print(all_files)
-
+localrules: all,  snp_split_concat
 rule all:
     input:
         all_files
@@ -36,7 +36,6 @@ checkpoint snp_split:
         "snpsplit prepare"
     conda:
         "envs/snpsplit.yml"
-    group: "snp_split"
     log:
         "logs/snp_split_{strain}.log"
     params:
@@ -55,7 +54,6 @@ rule snp_split_concat:
         strain="|".join(config.get("strains"))
     output:
         "output/GRCm38_masked_{strain}.fa"
-    group: "snp_split"
     run:
         pdb.set_trace()
         print("{input}")

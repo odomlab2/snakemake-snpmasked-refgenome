@@ -1,7 +1,7 @@
 executables:
   cellranger-rna: "/software/cellranger/6.0.0/bin/cellranger mkref"
 genome: "/omics/groups/OE0538/internal/shared_data/CellRangerReferences/GRCm38/fasta/genome.fa"
-annotation: "/omics/groups/OE0538/internal/shared_data/CellRangerReferences/GRCm38/annotation/genes.gtf"
+annotation: "/omics/groups/OE0538/internal/shared_data/CellRangerReferences/GRCm38/genes/genes.gtf"
 strains:
   - SPRET_EiJ
   - CAST_EiJ

@@ -29,7 +29,7 @@ checkpoint snp_split:
         ref_genome=os.path.dirname(config.get("genome"))
     output:
         dir_snp=temp(directory("output/SNPs_{strain}/")),
-        dir_fa=temp(directory("output/{strain}_N-masked/")),
+        dir_fa=directory("output/{strain}_N-masked/"),
         report="output/{strain}_SNP_filtering_report.txt",
         archive="output/all_SNPs_{strain}_GRCm38.txt.gz"
     message:

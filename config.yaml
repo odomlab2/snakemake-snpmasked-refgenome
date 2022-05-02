@@ -1,7 +1,7 @@
 executables:
   cellranger-rna: "/software/cellranger/6.0.0/bin/cellranger mkref"
-genome: "/omics/odcf/reference_data/by-species/public-data/Mus_musculus/GRCm38/GRCm38_phiX/unmodified/Mus_musculus.GRCm38.dna.fa"
-annotation: "/omics/odcf/reference_data/by-species/public-data/Mus_musculus/GRCm38/GRCm38_phiX/unmodified/cellranger-rna/6.1.1/ensembl-98/Mus_musculus_ensembl-98.filtered.gtf"
+genome: "/omics/groups/OE0538/internal/users/f844s/cellranger-ref/mm10/refdata-gex-mm10-2020-A/fasta/genome.fa"
+annotation: "/omics/groups/OE0538/internal/users/f844s/cellranger-ref/mm10/refdata-gex-mm10-2020-A/genes/genes.gtf"
 strains:
   - SPRET_EiJ
   - CAST_EiJ

@@ -7,53 +7,67 @@ HTTP = HTTPRemoteProvider()
 
 print(config)
 
-all_files = ["output/GRCm38_masked_{strain}".format(strain=strain) for strain in config.get("strains")]
+all_files = [
+    "output/GRCm38_masked_{strain}".format(strain=strain)
+    for strain in config.get("strains")
+]
 
 print(all_files)
-localrules: all,  snp_split_concat
+
+
+localrules:
+    all,
+    snp_split_concat,
+
+
 rule all:
     input:
-        all_files
+        all_files,
 
 
-
-#rule retrieve_snp_vcf:
+# rule retrieve_snp_vcf:
 #    #    input: HTTP.remote("ftp.sanger.ac.uk/pub/REL-1505-SNPs_Indels/mgp.v5.merged.snps_all.dbSNP142.vcf.gz", keep_local=True)
 #    output: "data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz"
 #    run:
-#	print("File is there {output}")
+# 	print("File is there {output}")
+
 
 checkpoint snp_split:
     input:
         vcf_file="data/mgp.v5.merged.snps_all.dbSNP142.vcf.gz",
-        ref_genome=os.path.dirname(config.get("genome"))
+        ref_genome=os.path.dirname(config.get("genome")),
     output:
         dir_snp=temp(directory("output/SNPs_{strain}/")),
-        dir_fa=temp(directory("output/{strain}_N-masked/")),
+        dir_fa=directory("output/{strain}_N-masked/"),
         report="output/{strain}_SNP_filtering_report.txt",
-        archive="output/all_SNPs_{strain}_GRCm38.txt.gz"
+        archive="output/all_SNPs_{strain}_GRCm38.txt.gz",
     message:
         "snpsplit prepare"
     conda:
         "envs/snpsplit.yml"
     log:
-        "logs/snp_split_{strain}.log"
+        "logs/snp_split_{strain}.log",
     params:
         strain=lambda wildcards: wildcards.strain,
     shell:
         "cd output; mkdir -p logs &&"
         "SNPsplit_genome_preparation --vcf_file ../{input.vcf_file} --strain {params.strain} --reference_genome {input.ref_genome} > {log}"
 
+
 rule snp_split_concat:
     input:
-        lambda wildcards: glob.glob("{directory}/{filename_pattern}".format(
-            directory=checkpoints.snp_split.get(**wildcards).output.dir_fa,
-            filename_pattern="*.fa")
-        )
+        lambda wildcards: sorted(
+            glob.glob(
+                "{directory}/{filename_pattern}".format(
+                    directory=checkpoints.snp_split.get(**wildcards).output.dir_fa,
+                    filename_pattern="*.fa",
+                )
+            )
+        ),
     wildcard_constraints:
-        strain="|".join(config.get("strains"))
+        strain="|".join(config.get("strains")),
     output:
-        "output/GRCm38_masked_{strain}.fa"
+        "output/GRCm38_masked_{strain}.fa",
     run:
         print("{input}")
         shell("cat {input} > {output}")
@@ -62,18 +76,18 @@ rule snp_split_concat:
 rule cellranger_rna_mkref:
     input:
         fasta=rules.snp_split_concat.output,
-        annotation=config.get("annotation")
+        annotation=config.get("annotation"),
     output:
-        directory("output/GRCm38_masked_{strain}")
+        directory("output/GRCm38_masked_{strain}"),
     wildcard_constraints:
-        strain="|".join(config.get("strains"))
+        strain="|".join(config.get("strains")),
     params:
         mem=300,
         output_root_dir=lambda wildcards, output: os.path.split(output[0])[0],
         cellranger_mkref_bin=config["executables"]["cellranger-rna"],
-        genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}"
+        genome=lambda wildcards, input: f"GRCm38_masked_{wildcards.strain}",
     log:
-        "cellranger_rna_mkref_GRCm38_masked_{strain}.log"
+        "cellranger_rna_mkref_GRCm38_masked_{strain}.log",
     shell:
         "cd output && "
         "{params.cellranger_mkref_bin} "
@@ -81,5 +95,3 @@ rule cellranger_rna_mkref:
         "--fasta=../{input.fasta[0]} "
         "--genes={input.annotation} "
         "--memgb={params.mem} > {log}"
-
-
